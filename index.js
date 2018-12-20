@@ -6,7 +6,7 @@ const log = require('./lib/log')
 var appzip = require('appmetrics-zipkin')({
     host: '51.141.44.34',
     port: 9411,
-    serviceName:pkg.name,
+    serviceName:"microservice-two",
     sampleRate: 1.0
   });
 
