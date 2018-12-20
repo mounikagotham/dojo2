@@ -19,9 +19,9 @@ jobs:
             mv /tmp/docker/* /usr/bin
       - run: |
           TAG=$CIRCLE_BUILD_NUM
-          docker build -t mounidocker/microservice-one:$TAG .      # (4)
+          docker build -t mounidocker/microservice-two:$TAG .      # (4)
           docker login -u $DOCKER_USER -p $DOCKER_PASS         # (5)
-          docker push mounidocker/microservice-one:$TAG
+          docker push mounidocker/microservice-two:$TAG
           az login --service-principal --username $APP_ID --password $PASSWORD --tenant $TENANT_ID
           az aks get-credentials --resource-group acctestRG1 --name acctestaks1
           sed "s/:latest/:$TAG/"  <microservice-two-deployment.yaml >microservice-two-deployment-tagged.yaml         
