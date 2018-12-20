@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-two--deployment
+  labels:
+    app: microservice-two
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: microservice-two
+  template:
+    metadata:
+      labels:
+        app: microservice-two
+    spec:
+      containers:
+      - name: microservice-two
+        image: mounidocker/microservice-two:latest
+        ports:
+        - containerPort: 8001
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: microservice-two-service
+  labels:
+    app: microservice-two
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8001
+  selector:
+    app: microservice-two
+
+       

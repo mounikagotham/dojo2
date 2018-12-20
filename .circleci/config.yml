@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/mern-starter
+    # The primary container is an instance of the first image listed. The job's commands run in this container.
+    docker:
+      - image: mounidocker/microservice-image
+    steps:
+      - checkout
+      - setup_remote_docker:   # (2)
+          docker_layer_caching: true 
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+      - run: |
+          TAG=$CIRCLE_BUILD_NUM
+          docker build -t mounidocker/microservice-one:$TAG .      # (4)
+          docker login -u $DOCKER_USER -p $DOCKER_PASS         # (5)
+          docker push mounidocker/microservice-one:$TAG
+          az login --service-principal --username $APP_ID --password $PASSWORD --tenant $TENANT_ID
+          az aks get-credentials --resource-group acctestRG1 --name acctestaks1
+          sed "s/:latest/:$TAG/"  <microservice-deployment.yaml >microservice-deployment-tagged.yaml         
+          kubectl apply -f microservice-deployment-tagged.yaml
