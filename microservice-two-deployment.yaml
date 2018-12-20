@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: microservice-two
-        image: mounidocker/microservice-two:latest
+        image: mounidocker/microservice-one:latest
         ports:
         - containerPort: 8001
 ---
